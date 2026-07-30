@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Endless Wheel - An addictive endless runner game. Jump over obstacles, beat high scores, and experience smooth mobile gameplay.">
+    <meta name="keywords" content="endless wheel, runner game, mobile game, godot, android, ios">
+    <meta name="author" content="Your Company Name">
+    <title>Endless Wheel - Jump. Survive. Score. 🎮</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FFD700;
+            --primary-dark: #FFC700;
+            --bg-dark: #0F0F0F;
+            --bg-secondary: #1A1A1A;
+            --text-light: #FFFFFF;
+            --text-muted: #CCCCCC;
+            --accent: #FF6B6B;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1a2e 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+            top: -200px;
+            right: -100px;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), #FFE135);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #000;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: #000;
+            transform: translateY(-3px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+            background: var(--bg-secondary);
+            margin-top: 3rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.02) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Gameplay Section */
+        .gameplay {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .gameplay-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .gameplay-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+
+        .gameplay-text p {
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .gameplay-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .gameplay-feature {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .gameplay-feature .icon {
+            color: var(--primary);
+            font-weight: bold;
+            min-width: 2rem;
+        }
+
+        .gameplay-screenshot {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        /* Download Section */
+        .download {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .download-content {
+            text-align: center;
+        }
+
+        .download h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .download p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .store-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            padding: 1rem 2rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: var(--text-light);
+        }
+
+        .store-badge:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .store-badge .icon {
+            font-size: 2rem;
+        }
+
+        .store-badge .text {
+            text-align: left;
+        }
+
+        .store-badge .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .store-badge .name {
+            font-weight: bold;
+            color: var(--text-light);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 4rem 0;
+            background: var(--bg-secondary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat {
+            padding: 2rem;
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            padding: 3rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .gameplay-content {
+                grid-template-columns: 1fr;
+            }
+
+            .gameplay-text h2 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-buttons .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .store-badge {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            nav .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav a {
+                margin-left: 0;
+            }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero::before {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature-card {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+        .feature-card:nth-child(5) { animation-delay: 0.5s; }
+        .feature-card:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">🎮 Endless Wheel</a>
+            <div>
+                <a href="#features">Features</a>
+                <a href="#gameplay">Gameplay</a>
+                <a href="#download">Download</a>
+                <a href="https://github.com/yourusername/endless-wheel" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Endless Wheel</h1>
+            <p class="subtitle">Jump. Survive. Score. 🎮</p>
+            <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem;">
+                An addictive endless runner game. Beat your high score and compete with friends!
+            </p>
+            <div class="cta-buttons">
+                <a href="#download" class="btn btn-primary">📥 Download Now</a>
+                <a href="https://github.com/yourusername/endless-wheel" target="_blank" class="btn btn-secondary">⭐ View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why You'll Love It</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🎮</span>
+                    <h3>Addictive Gameplay</h3>
+                    <p>Simple controls, challenging obstacles. Jump to survive and beat your high score!</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3>Progressive Difficulty</h3>
+                    <p>Speed increases over time. Easy to learn, hard to master. How far can you go?</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🏆</span>
+                    <h3>High Score System</h3>
+                    <p>Automatic save. Compete with yourself. Beat your personal best!</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">✨</span>
+                    <h3>Beautiful Effects</h3>
+                    <p>Smooth animations, particle effects, camera shake. Polished mobile experience.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📱</span>
+                    <h3>Optimized for Mobile</h3>
+                    <p>60 FPS on all devices. Touch controls. Portrait mode. Perfect for on-the-go play.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔒</span>
+                    <h3>Privacy First</h3>
+                    <p>No tracking. No ads. No data collection. Play offline. Just pure fun!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gameplay Section -->
+    <section class="gameplay" id="gameplay">
+        <div class="container">
+            <div class="gameplay-content">
+                <div class="gameplay-text">
+                    <h2>How to Play</h2>
+                    <div class="gameplay-features">
+                        <div class="gameplay-feature">
+                            <span class="icon">1️⃣</span>
+                            <div>
+                                <strong>Tap to Jump</strong>
+                                <p>Touch anywhere on screen to jump over obstacles.</p>
+                            </div>
+                        </div>
+                        <div class="gameplay-feature">
+                            <span class="icon">2️⃣</span>
+                            <div>
+                                <strong>Avoid Obstacles</strong>
+                                <p>Red rectangles spawn randomly. One collision = game over!</p>
+                            </div>
+                        </div>
+                        <div class="gameplay-feature">
+                            <span class="icon">3️⃣</span>
+                            <div>
+                                <strong>Speed Increases</strong>
+                                <p>The longer you survive, the faster it gets. Higher difficulty = higher score!</p>
+                            </div>
+                        </div>
+                        <div class="gameplay-feature">
+                            <span class="icon">4️⃣</span>
+                            <div>
+                                <strong>Beat Your High Score</strong>
+                                <p>Automatically saved. Beat your personal best and compete with friends!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gameplay-screenshot">
+                    🎮<br><br>Gameplay Preview
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-number">60</div>
+                    <div class="stat-label">FPS Target</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">1280×720</div>
+                    <div class="stat-label">Resolution</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">&lt;100MB</div>
+                    <div class="stat-label">App Size</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Free & Ad-Free</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download" id="download">
+        <div class="container">
+            <div class="download-content">
+                <h2>Download Now</h2>
+                <p>Available on Android, iOS, and Web</p>
+                <div class="download-buttons">
+                    <a href="https://play.google.com/store/apps/details?id=com.yourcompany.endlesswheel" target="_blank" class="store-badge">
+                        <span class="icon">🤖</span>
+                        <span class="text">
+                            <span class="label">GET IT ON</span>
+                            <span class="name">Google Play</span>
+                        </span>
+                    </a>
+                    <a href="https://apps.apple.com/app/endless-wheel/id1234567890" target="_blank" class="store-badge">
+                        <span class="icon">🍎</span>
+                        <span class="text">
+                            <span class="label">DOWNLOAD FROM</span>
+                            <span class="name">App Store</span>
+                        </span>
+                    </a>
+                    <a href="https://play.endless-wheel.com" target="_blank" class="store-badge">
+                        <span class="icon">🌐</span>
+                        <span class="text">
+                            <span class="label">PLAY ON</span>
+                            <span class="name">Web Browser</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <a href="#features">Features</a>
+                    <a href="#download">Download</a>
+                    <a href="https://github.com/yourusername/endless-wheel" target="_blank">GitHub</a>
+                    <a href="CHANGELOG.md">Changelog</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="PRIVACY_POLICY.md">Privacy Policy</a>
+                    <a href="TERMS_OF_SERVICE.md">Terms of Service</a>
+                    <a href="LICENSE">License (MIT)</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <a href="https://github.com/yourusername/endless-wheel/issues" target="_blank">Report Issue</a>
+                    <a href="https://github.com/yourusername/endless-wheel/discussions" target="_blank">Discussions</a>
+                    <a href="https://github.com/yourusername/endless-wheel/blob/main/CONTRIBUTING.md" target="_blank">Contributing</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Your Company Name. All rights reserved.</p>
+                <p>Endless Wheel is made with ❤️ using Godot 4.6</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add scroll animation for elements
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .stat').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.5s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
